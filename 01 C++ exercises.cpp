@@ -22,11 +22,11 @@ void exercise5();
 int main() {
     std::cout << "Welcome to your exercises in C++ !\n" << std::endl;
 
-    exercise1();
-    //exercise2();
-    //exercise3();
-    //exercise4();
-    //exercise5();
+    // exercise1();
+    // exercise2();
+    // exercise3();
+    exercise4();
+    // exercise5();
 
     return 0;
 }
@@ -45,6 +45,10 @@ void exercise1(){
     std::cout<< "\nExercise 1: I/O" << std::endl;
 
     std::cout << "Please enter your name: ";
+
+    // Q: std::string vs char *?
+    // Q: annoying stale terminal output when running
+    // Q: type check underlining out of date
     std::string name;
     std::cin >> name;
 
@@ -71,8 +75,19 @@ void exercise1(){
 void exercise2(){
     std::cout<< "\nExercise 2: Iteration and formatting" << std::endl;
 
-    //Write your solution here.
+    for (int i = 1; i < 6; i++)
+    {
+        std::cout << i;
+        if (i < 5) {
+            std::cout << ",";
+        }
+    }
 
+    std::cout << std::endl;
+    for (int i = 1; i < 6; i++)
+    {
+        std::cout << i << std::endl;
+    }
 }
 
 /*
@@ -85,13 +100,52 @@ void exercise2(){
 * If you already have the switch function in C, will it run in C++ as it is or do you have to change it?
 */
 
+char markToLetterGrade(int mark) {
+    if (mark < 40) {
+        return 'F';
+    }
+    if (mark < 50) {
+        return 'D';
+    }
+    if (mark < 60) {
+        return 'C';
+    }
+    if (mark < 70) {
+        return 'B';
+    }
+    return 'A';
+}
+
+std::string letterGradeToDegreeClass(char letterGrade)
+{
+    switch (letterGrade) {
+        case 'A':
+            return "First";
+        case 'B':
+            return "2:1";
+        case 'C':
+            return "Second";
+        case 'D':
+            return "Third";
+        default:
+            return "Fail";
+        }
+}
+
 void exercise3(){
     std::cout<< "\nExercise 3: Selection" << std::endl;
 
-    //Write your solution here. 
+    std::cout << "Enter mark (0 to 100): ";
 
+    int mark;
+    std::cin >> mark;
+
+    char letterGrade = markToLetterGrade(mark);
+    
+    std::cout << "Grade: " << letterGrade << std::endl;
+
+    std::cout << "Degree class: " << letterGradeToDegreeClass(letterGrade) << std::endl;
 }
-
 
 /* 
 * Exercise 4: 
@@ -110,8 +164,25 @@ void exercise3(){
 void exercise4(){
     std::cout<< "\nExercise 4: Arrays" << std::endl;
 
-    //Write your solution here.  
+    const int ARRAY_LEN = 5;
+    int numbers[ARRAY_LEN] = {1, 2, 3, 4, 5};
+    for (int i = 0; i < ARRAY_LEN; i++) {
+        std::cout << "numbers[" << i << "]: " << numbers[i] << std::endl;
+    }
 
+    for (int number : numbers)
+    {
+        std::cout << "number: " << number << std::endl;
+    }
+
+    int *heapNumbers = new int[ARRAY_LEN];
+    for (int i = 0; i < ARRAY_LEN; i++) {
+        heapNumbers[i] = i + 1;
+    }
+    // int *heapNumbers = new int[ARRAY_LEN]{ 0 };
+    for (int i = 0; i < ARRAY_LEN; i++) {
+        std::cout << "heapNumbers[" << i << "]: address " << &heapNumbers[i] << ", value " << heapNumbers[i] << std::endl;
+    }
 }
 
 /* Exercise 5
@@ -134,13 +205,13 @@ class Student{
 
     public: 
         Student(){} //default constructor 
-        Student(std::string name, int id){ //non-default constructor 
-            //assign name here
-            //assign id here
+        Student(std::string name, int id){ //non-default constructor
+            this->id = id;
+            this->name = name;
         }
         void print(){
-            //print name
-            //print id
+            std::cout << "name: " << this->name << std::endl;
+            std::cout << "id: " << this->id << std::endl;
         }
 };
 
@@ -149,6 +220,22 @@ void exercise5(){
     
     std::cout << "Exercise 5: Classes & Objects" <<std::endl;
 
-    //Write solution here. 
+    Student *student = new Student("Joe", 7266);
+    std::cout << "student memory address: " << &student << std::endl;
 
+    Student student2 = Student("Joe2", 7266);    
+    std::cout << "student2 memory address: " << &student2 << std::endl;
+
+    student->print();
+    student2.print();
+
+    Student *studentArray = new Student[5];
+    for (int i = 0; i < 5; i++) {
+        studentArray[i] = Student("J", i);
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "studentArray[" << i << "]: address " << &studentArray[i] << std::endl;
+        studentArray[i].print();   
+    }
 }
