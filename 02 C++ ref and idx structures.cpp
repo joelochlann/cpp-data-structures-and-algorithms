@@ -43,9 +43,9 @@ int main() {
     cout << "C++ DS&A Arrays, Vectors and Lists\n" << endl;
 
     // exercise1();
-    exercise2();
-    exercise3();
-    //exercise4();
+    // exercise2();
+    // exercise3();
+    exercise4();
     //exercise5();
 
     return 0;
@@ -160,6 +160,7 @@ class Link{
         // Q: is this implicitly NULL, aka 0?
         // Q: better way to do getters and setters?
         Link *next;
+        Link *previous;
 
     public: 
         Link(){} //default constructor 
@@ -180,6 +181,14 @@ class Link{
         void setNext(Link *n)
         {
             this->next = n;
+        }
+        Link *getPrevious()
+        {
+            return this->previous;
+        }
+        void setPrevious(Link *n)
+        {
+            this->previous = n;
         }
 };
 
@@ -211,12 +220,14 @@ void exercise2(){
 class LinkedList{
     private:
         Link *head;
+        Link *tail;
 
     public:
         LinkedList(){
             // Q: how to signify end of list?
             // assign 0 to the head of the list by default here
             this->head = NULL;
+            this->tail = NULL;
         }
         void display(){
             // traverse the list here by looking each 'next' pointer of a Link instance.
@@ -228,24 +239,43 @@ class LinkedList{
             }
         }
         void prepend(Link* newLink){
-            // Current head becomes next of new head
-            // newLink is new head
-            Link *oldHead = this->head;
-            this->head = newLink;
-            newLink->setNext(oldHead);
-        }
-        void append(Link* newLink){
             if (this->isEmpty()) {
                 this->head = newLink;
-                return;
+                this->tail = newLink;
+            } else {
+                Link *oldHead = this->head;
+                this->head = newLink;
+                // Only do this if the list was not previously empty
+                // (otherwise we'll segfault when we try and call methods on the null oldHead pointer)
+                oldHead->setPrevious(newLink);
+                newLink->setNext(oldHead);
             }
-            //add a new link instance to the tail of the list.
-            Link *current = this->head;
-            while (current->getNext()) {
-                current = current->getNext();
+        }
+        void append(Link* newLink){
+            // singly-linked list version (traverse from head):
+            // if (this->isEmpty()) {
+            //     this->head = newLink;
+            //     return;
+            // }
+            // add a new link instance to the tail of the list.
+            // Link *current = this->head;
+            // while (current->getNext()) {
+            //     current = current->getNext();
+            // }
+            // // next should be NULL now
+            // current->setNext(newLink);
+
+            // New link becomes next of current tail
+            // newLink is new tail
+            if (this->isEmpty()) {
+                this->head = newLink;
+                this->tail = newLink;
+            } else {
+                Link *oldTail = this->tail;
+                this->tail = newLink;
+                oldTail->setNext(newLink);
+                newLink->setPrevious(oldTail);
             }
-            // next should be NULL now
-            current->setNext(newLink);
         }
         Link* find(int valToFind){
             // traverse the list and match the 'valToFind' 
@@ -261,19 +291,39 @@ class LinkedList{
             return NULL;
         }
         Link* remove(int valToDelete){
+            // TODO Q: do we need to deallocate memory??
+
             // first 'find' the Link instance to delete
             // make sure the Link before the 'one to delete' points to the 'next' of the 'one to delete'. 
             // return the pointer to the link that was deleted, or null pointer if not deleted.
+
+            // Removing the head is a special case
             if (this->head->getData() == valToDelete) {
-                this->head = this->head->getNext();
-                return this->head;
+                Link *nodeToDelete = this->head;
+                Link *newHead = nodeToDelete->getNext();
+                newHead->setPrevious(NULL);
+                if (newHead->getNext()) {
+                    newHead->getNext()->setPrevious(newHead);
+                } else {
+                    // It's now a one-element list
+                    this->tail = newHead;
+                }
+                this->head = newHead;
+                return newHead;
             }
 
             Link *current = this->head;
             while (current && current->getNext()) {
                 if (current->getNext()->getData() == valToDelete) {
                     Link *nodeToDelete = current->getNext();
-                    current->setNext(nodeToDelete->getNext());
+                    
+                    if (nodeToDelete == this->tail) {
+                        current->setNext(NULL);
+                        this->tail = current;
+                    } else {
+                        current->setNext(nodeToDelete->getNext());
+                        current->getNext()->setPrevious(current);
+                    }
                     return nodeToDelete;
                 }
                 current = current->getNext();
@@ -332,6 +382,32 @@ void exercise3(){
 void exercise4(){
     cout<< "\nExercise 4: Doubly Linked List " << endl;
 
+    LinkedList *ll = new LinkedList();
+    // cout << "376" << endl;
+    ll->prepend(new Link(3));
+    // cout << "378" << endl;
+    ll->prepend(new Link(2));
+    ll->prepend(new Link(1));
+    // cout << "387" << endl;
+    ll->append(new Link(4));
+    ll->append(new Link(5));
+    ll->append(new Link(6));
+    // cout << "391" << endl;
+    ll->display();
+
+    cout << "\n==== ll2 " << endl;
+    LinkedList *ll2 = new LinkedList();
+    ll2->append(new Link(1));
+    ll2->append(new Link(2));
+    ll2->append(new Link(3));
+    ll2->append(new Link(4));
+    ll2->append(new Link(5));
+    ll2->append(new Link(6));
+    ll2->remove(2);
+    ll2->remove(4);
+    ll2->remove(1);
+    ll2->remove(6);
+    ll2->display();
 }
 
 /* Exercise 5: STL List vs Linked List 
