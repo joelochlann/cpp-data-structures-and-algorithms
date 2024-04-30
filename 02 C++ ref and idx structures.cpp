@@ -2,7 +2,7 @@
 //#include <algorithm>
 //#include <vector>
 #include <array>
-//#include <list>
+#include <list>
 
 
 /* README
@@ -46,7 +46,7 @@ int main() {
     // exercise2();
     // exercise3();
     exercise4();
-    //exercise5();
+    exercise5();
 
     return 0;
 }
@@ -425,4 +425,14 @@ void exercise5(){
     
     cout << "Exercise 5: STL List vs Linked List" << endl;
 
+    list<int> l;
+    l.insert(l.end(), 1);
+    l.insert(l.end(), 2);
+    l.insert(l.end(), 3);
+    l.insert(l.end(), 4);
+    l.insert(l.end(), 5);
+
+    for (auto pos = l.begin(); pos != l.end(); pos++) {
+        cout << *pos << endl;
+    }
 }
