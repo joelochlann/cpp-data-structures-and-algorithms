@@ -35,6 +35,18 @@ void merge(int arr[], int left, int mid, int right); // Exercise 3
 int linearSearch(int arr[], int size, int target); // Exercise 4
 int binarySearch(int arr[], int size, int target); // Exercise 5
 
+void print(int arr[], int size) {
+    cout << "[";
+    for (int i = 0; i < size; i++)
+    {
+        cout << arr[i];
+        if (i < (size - 1)) {
+            cout << ", ";
+        }
+    }
+    cout << "]" << endl;
+}
+
 int main() {
     cout << "C++ DS&A Big O + Search and Sorting algorithms\n" << endl;
 
@@ -42,26 +54,30 @@ int main() {
 
     // initialise a constant for SIZE_S with the value 100
     // initialise a constant for SIZE_L with the value 100000
-    int *smallArray; // extend this statement so you point to an array of SIZE_S using the 'new' keyword 
-    int *largeArray; // extend this statement so you point to an array of SIZE_L using the 'new' keyword
+    const size_t SIZE_S = 100;
+    const size_t SIZE_L = 100000;
+
+    // Q: what would happen if these were on the stack, rather than heap?
+    int *smallArray = new int[SIZE_S]; // extend this statement so you point to an array of SIZE_S using the 'new' keyword
+    int *largeArray = new int[SIZE_L]; // extend this statement so you point to an array of SIZE_L using the 'new' keyword
 
 
     //START TIMER for the smallArray
-    auto start = chrono::high_resolution_clock::now();
+    // auto start = chrono::high_resolution_clock::now();
 
     //uncomment below once ready
-    //initArray(smallArray, SIZE_S);
+    initArray(smallArray, SIZE_S);
 
     //END TIMER for the smallArray
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> duration = end - start;
-    cout << "Elapsed time: " << duration.count() << " seconds\n";
+    // auto end = chrono::high_resolution_clock::now();
+    // chrono::duration<double> duration = end - start;
+    // cout << "Elapsed time: " << duration.count() << " seconds\n";
     
 
     //START TIMER for the largeArray
 
     //uncomment below once ready
-    //initArray(largeArray, SIZE_L); 
+    initArray(largeArray, SIZE_L); 
 
     //END TIMER for the largeArray
 
@@ -69,13 +85,20 @@ int main() {
 
 /* EXERCISE 2 - Bubble Sort */
 
-
     // START TIMER
-    //bubbleSort(smallArray, SIZE_S);
+    // print(largeArray, SIZE_L);
+    auto start = chrono::high_resolution_clock::now();
+    bubbleSort(largeArray, SIZE_L);
+    // print(largeArray, SIZE_L);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Elapsed time: " << duration.count() << " seconds\n";
+    // print(largeArray, SIZE_L);
+
     // END TIMER
 
     // START TIMER
-    //bubbleSort(largeArray, SIZE_L);
+    // bubbleSort(largeArray, SIZE_L);
     // END TIMER
 
 
@@ -118,7 +141,10 @@ void initArray(int arr[], int size){
     cout<< "\nExercise 1: Initialise an array of size " << size << endl;
 
     //implement your solution here
-
+    for (int i = 0; i < size; i++) {
+        //*(arr + i) = getRandomNumber();
+        arr[i] = getRandomNumber();
+    }
 }
 
 /*
@@ -130,11 +156,26 @@ void initArray(int arr[], int size){
 * Compare the time of the optimised against the unoptimised original algorithm 
 */
 
+void swap(int *a, int *b) {
+    int *temp;
+    temp = b;
+    b = a;
+    a = temp;
+}
+
 void bubbleSort(int arr[], int size){
     cout<< "\nExercise 2: Bubble Sort on an array of size " << size << endl;
 
-    //implement your solution here
-
+    bool swapped;
+    do {
+        swapped = false;
+        for (int i = 0; i < (size - 1); i++) {
+            if (arr[i] > arr[i+1]) {
+                swap(arr[i], arr[i + 1]);
+                swapped = true;
+            }
+        }
+    } while (swapped);
 }
 
 /*
