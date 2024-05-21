@@ -54,52 +54,45 @@ private:
     static const size_t MAX_SIZE = 10;
     // define an integer array of MAX_SIZE to store elements
     int elements[MAX_SIZE];
-    // position where next element would be inserted
-    size_t top = 0;
+    int top = -1;
 
 public:
     ArrayStack() {}
 
     bool isEmpty()
     {
-        return top == 0;
+        return top == -1;
     }
 
     bool isFull()
     {
-        return top == MAX_SIZE;
+        return top == MAX_SIZE - 1;
     }
 
     void push(int item)
     {
         // The push function should add new data to the top of the stack
-        if (top < MAX_SIZE)
-        {
-            elements[top] = item;
-            top++;
+        if (!isFull()) {
+            elements[++top] = item;
         }
     }
 
-    int pop()
+    optional<int> pop()
     {
         // The pop function should remove data from the top of the stack
-        if (top > 0)
-        {
-            int el = elements[top - 1];
-            top--;
-            return el;
+        if (isEmpty()) {
+            return nullopt;
         }
-        return NULL;
+        return optional<int>{elements[--top]};
     }
 
-    int peek()
+    optional<int> peek()
     {
         // The peek function should return the top of the stack (but not delete)
-        if (top > 0)
-        {
-            return elements[top - 1];
+        if (isEmpty()) {
+            return nullopt;
         }
-        return NULL;
+        return optional<int>{elements[top]};
     }
 };
 
@@ -109,18 +102,22 @@ int main() {
 // Ex 1 - Stack with an array / vector 
     cout << "Exercise 1: Stack using an Array / Vector" << endl;
     // instantiate the Stack class and push/pop values here.
+
     ArrayStack *arrayStack = new ArrayStack();
+    cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
     arrayStack->push(1);
     arrayStack->push(2);
     arrayStack->push(3);
-    cout << "popped " << arrayStack->pop() << endl;
-    cout << "popped " << arrayStack->pop() << endl;
-    cout << "popped " << arrayStack->pop() << endl;
-    cout << "popped " << arrayStack->pop() << endl;
-    cout << "popped " << arrayStack->pop() << endl;
+    cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
+    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
 
     // Ex 2 - Stack with a Linked List
-    cout << "\nExercise 2: Stack using a Linked List " << endl;
+    cout
+        << "\nExercise 2: Stack using a Linked List " << endl;
 
     // instantiate the LinkedStack class and push/pop nodes here. 
 
