@@ -77,8 +77,7 @@ public:
         }
     }
 
-    optional<int> pop()
-    {
+    optional<int> pop() {
         // The pop function should remove data from the top of the stack
         if (isEmpty()) {
             return nullopt;
@@ -96,6 +95,103 @@ public:
     }
 };
 
+/*
+ * Exercise 2: Create a Stack that uses a Linked List
+ * Now complete the 'LinkedStack' class below, using similiar logic to the 'Stack' class above.
+ * However, this time, the pointers to an object of a class will be stacked (pushed) on top of previously added pointers.
+ * Code this to be a template class which store objects to pointers of any class.
+ *
+ * Extension: Function calls and user actions are often stacked on top of each other, often for the purposes of going back/undoing actions.
+ *            Furthermore, We'll see that the Depth-First Search algorithm stacks nodes on top of each other (and Breadth-First Search algorithm uses queues).
+ *            For now, simulate a scenario which requires items to be stacked on top of each other. You could add pointers to either functions or objects to this LinkedStack template you've created.
+ */
+
+// Make sure you have a Node/Link class defined
+// so that pointers to objects of this class can be added to the LinkedStack
+
+class Link
+{
+private:
+    int data;
+    // Q: is this implicitly NULL, aka 0?
+    // Q: better way to do getters and setters?
+    Link *next;
+
+public:
+    Link() {} // default constructor
+    Link(int data)
+    { // non-default constructor
+        // assign local 'data' to this Link's data.
+        this->data = data;
+    }
+    void print()
+    {
+        // print out the value of this Link's data
+        cout << this->data << endl;
+    }
+    int getData()
+    {
+        return this->data;
+    }
+    Link *getNext()
+    {
+        return this->next;
+    }
+    void setNext(Link *n)
+    {
+        this->next = n;
+    }
+};
+
+class LinkedStack
+{
+private:
+    Link *top;
+
+public:
+    LinkedStack() {}
+
+    ~LinkedStack()
+    { // Destructor!
+        // Delete all nodes to avoid memory leaks
+        while (!isEmpty()) {
+            pop();
+        }
+    }
+
+    bool isEmpty()
+    {
+        return top == NULL;
+    }
+
+    void push(int value)
+    {
+        //  Current head becomes next of new head
+        // newLink is new head
+        Link *newLink = new Link(value);
+        Link *oldHead = this->top;
+
+        newLink->setNext(oldHead);
+        this->top = newLink;
+    }
+
+    int pop()
+    {
+        // The pop function should remove data from the top of the stack
+        Link *oldTop = this->top;
+        this->top = this->top->getNext();
+        int oldValue = oldTop->getData();
+        delete oldTop;
+        return oldValue;
+    }
+
+    int peek()
+    {
+        // The peek function should return the top of the stack (but not delete)
+        return this->top->getData();
+    }
+};
+
 int main() {
     cout << "C++ DS&A Stacks and Queues\n" << endl;
 
@@ -103,26 +199,37 @@ int main() {
     cout << "Exercise 1: Stack using an Array / Vector" << endl;
     // instantiate the Stack class and push/pop values here.
 
-    ArrayStack *arrayStack = new ArrayStack();
-    cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
-    arrayStack->push(1);
-    arrayStack->push(2);
-    arrayStack->push(3);
-    cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
-    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-    cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    // ArrayStack *arrayStack = new ArrayStack();
+    // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
+    // arrayStack->push(1);
+    // arrayStack->push(2);
+    // arrayStack->push(3);
+    // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
+    // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+    // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
 
     // Ex 2 - Stack with a Linked List
     cout
         << "\nExercise 2: Stack using a Linked List " << endl;
 
-    // instantiate the LinkedStack class and push/pop nodes here. 
+    LinkedStack *linkedStack = new LinkedStack();
+    // cout << "peeked " << linkedStack->peek() << endl;
+    linkedStack->push(1);
+    linkedStack->push(2);
+    linkedStack->push(3);
+    cout << "peeked " << linkedStack->peek() << endl;
+    cout << "peeked " << linkedStack->peek() << endl;
+    cout << "popped " << linkedStack->pop() << endl;
+    cout << "popped " << linkedStack->pop() << endl;
+    cout << "peeked " << linkedStack->peek() << endl;
+    // cout << "popped " << linkedStack->pop() << endl;
+    // cout << "popped " << linkedStack->pop() << endl;
+    // cout << "popped " << linkedStack->pop() << endl;
 
-
-// Ex 3 - Queue using an Array 
+    // Ex 3 - Queue using an Array 
 
     cout << "\nExercise 3: Queue using an Array " << endl;
 
@@ -163,51 +270,6 @@ int main() {
 */
 
 
-
-
-/*
-* Exercise 2: Create a Stack that uses a Linked List 
-* Now complete the 'LinkedStack' class below, using similiar logic to the 'Stack' class above.
-* However, this time, the pointers to an object of a class will be stacked (pushed) on top of previously added pointers.
-* Code this to be a template class which store objects to pointers of any class. 
-* 
-* Extension: Function calls and user actions are often stacked on top of each other, often for the purposes of going back/undoing actions. 
-*            Furthermore, We'll see that the Depth-First Search algorithm stacks nodes on top of each other (and Breadth-First Search algorithm uses queues).            
-*            For now, simulate a scenario which requires items to be stacked on top of each other. You could add pointers to either functions or objects to this LinkedStack template you've created.
-*/
-
-// Make sure you have a Node/Link class defined 
-// so that pointers to objects of this class can be added to the LinkedStack
-
-class LinkedStack {
-private:
-    //Define a pointer to the top 'node' of the stack
-
-public:
-    LinkedStack(){}
-
-    ~LinkedStack() {  // Destructor! 
-        // Delete all nodes to avoid memory leaks
-    }
-
-    bool isEmpty() {
-        return 0;
-    }
-
-    void push(int value) {  //feel free to amend the signature
-        //The push function should add new data to the top of the stack 
-    }
-
-    int pop() {
-        //The pop function should remove data from the top of the stack
-        return 0;
-    }
-
-    int peek() {
-        //The peek function should return the top of the stack (but not delete)
-        return 0;
-    }
-};
 
 
 /*
