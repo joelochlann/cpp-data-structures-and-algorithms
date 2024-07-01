@@ -105,5 +105,7 @@
     "unordered_map": "cpp",
     "optional": "cpp",
     "stack": "cpp"
-  }
+  },
+  "C_Cpp.clang_format_fallbackStyle": "Google",
+  "C_Cpp.clang_format_style": "Google"
 }
