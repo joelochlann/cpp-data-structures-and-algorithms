@@ -47,6 +47,72 @@ void print(int arr[], int size) {
     cout << "]" << endl;
 }
 
+bool isSorted(int arr[], int size) {
+    if (size == 0 || size == 1) {
+        return true;
+    }
+    for (int i = 1; i < size; i++)
+    {
+        if (arr[i] < arr[i-1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+double timeSort(void (*sortFunc)(int[], size_t), size_t size) {
+    int *arr = new int[size];
+    initArray(arr, size);
+    auto start = chrono::high_resolution_clock::now();
+    sortFunc(arr, size);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+
+    if (isSorted(arr, size))
+    {
+        cout << "After sort: array is sorted" << endl;
+    }
+    else
+    {
+        cout << "After sort: array is not sorted!" << endl;
+    }
+    cout << "Elapsed time for " << size << "elements: " << duration.count() << " seconds\n";
+    return duration.count();
+}
+
+
+void compareSortTime(void (*sortFunc)(int[], size_t), size_t size1, size_t size2) {
+    double time1 = timeSort(sortFunc, size1);
+    double time2 = timeSort(sortFunc, size2);
+    cout << "Ratio between array sizes: " << size2 / size1 << endl;
+    cout << "Ratio between sort times: " << time2 / time1 << endl;
+}
+
+void compareSortTime(void (*sortFunc)(int[], size_t), size_t size1, size_t size2) {
+    double time1 = timeSort(sortFunc, size1);
+    double time2 = timeSort(sortFunc, size2);
+    cout << "Ratio between array sizes: " << size2 / size1 << endl;
+    cout << "Ratio between sort times: " << time2 / time1 << endl;
+}
+
+double timeSearch(int (*searchFunc)(int[], size_t, int), size_t size, int target) {
+    int *arr = new int[size];
+    initArray(arr, size);
+    auto start = chrono::high_resolution_clock::now();
+    searchFunc(arr, size, target);
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Elapsed time for " << size << "elements: " << duration.count() << " seconds\n";
+    return duration.count();
+}
+
+void compareSearchTime(int (*searchFunc)(int[], size_t, int), size_t size1, size_t size2, int target) {
+    double time1 = timeSearch(searchFunc, size1, target);
+    double time2 = timeSearch(searchFunc, size2, target);
+    cout << "Ratio between array sizes: " << size2 / size1 << endl;
+    cout << "Ratio between sort times: " << time2 / time1 << endl;
+}
+
 int main() {
     cout << "C++ DS&A Big O + Search and Sorting algorithms\n" << endl;
 
@@ -57,52 +123,14 @@ int main() {
     const size_t SIZE_S = 100;
     const size_t SIZE_L = 100000;
 
-    // Q: what would happen if these were on the stack, rather than heap?
-    int *smallArray = new int[SIZE_S]; // extend this statement so you point to an array of SIZE_S using the 'new' keyword
-    int *largeArray = new int[SIZE_L]; // extend this statement so you point to an array of SIZE_L using the 'new' keyword
-
-
-    //START TIMER for the smallArray
-    // auto start = chrono::high_resolution_clock::now();
-
-    //uncomment below once ready
-    initArray(smallArray, SIZE_S);
-
-    //END TIMER for the smallArray
-    // auto end = chrono::high_resolution_clock::now();
-    // chrono::duration<double> duration = end - start;
-    // cout << "Elapsed time: " << duration.count() << " seconds\n";
-    
-
-    //START TIMER for the largeArray
-
-    //uncomment below once ready
-    initArray(largeArray, SIZE_L); 
-
-    //END TIMER for the largeArray
-
+    // TODO: some timing for something linear (initialising arrays)
 
 
 /* EXERCISE 2 - Bubble Sort */
 
-    // START TIMER
-    // print(largeArray, SIZE_L);
-    auto start = chrono::high_resolution_clock::now();
-    bubbleSort(largeArray, SIZE_L);
-    // print(largeArray, SIZE_L);
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> duration = end - start;
-    cout << "Elapsed time: " << duration.count() << " seconds\n";
-    // print(largeArray, SIZE_L);
+    compareSortTime(bubbleSort, SIZE_S, SIZE_L);
 
-    // END TIMER
-
-    // START TIMER
-    // bubbleSort(largeArray, SIZE_L);
-    // END TIMER
-
-
-/* Exercise 3 - Merge Sort */
+    /* Exercise 3 - Merge Sort */
 
     // START TIMER
     //cout<< "\nExercise 3: Merge Sort on an array of size " << SIZE_S << endl;
@@ -163,7 +191,7 @@ void swap(int *a, int *b) {
     a = temp;
 }
 
-void bubbleSort(int arr[], int size){
+void bubbleSort(int arr[], size_t size){
     cout<< "\nExercise 2: Bubble Sort on an array of size " << size << endl;
 
     bool swapped;
