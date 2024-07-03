@@ -52,55 +52,7 @@ class Contact; //Exercise 4 - representing the Person's name and phone number
 
 void unorderedMap(); // Exercise 5
 
-int main() {
-    cout << "C++ DS&A Hashing\n" << endl;
 
-// Ex 1 
-    // Declare a constant for the TABLE_SIZE of 30
-    long *hashTable; // Declare a pointer to an array of TABLE_SIZE. Use the data type 'long' to be able to handle 11-12 digit phone numbers. 
-
-    cout << "Exercise 1: Hash Function for integer keys" << endl;
-
-    //call the 'getPhoneNumber' here and assign return to 'key'
-    //then pass the key and TABLE_SIZE to the hash_ function - assign the return to an index variable
-    //hashTable[index] = key;
-
-    /* Check your hash worked correctly by uncommenting the below statement */
-    //cout << "The hash of key " << key << " is " << index << " which stores the value " << hashTable[hash_(key, TABLE_SIZE)] << endl;
-
-// Ex 2
-    cout << "\nExercise 2: Overloaded Hash Function for string keys" << endl;
-
-    // assign your name as a key and call the overloaded hash function
-/* 
-    string stringKey = "Nick"; //now assign a name of a person as a string key
-    key = getPhoneNumber(); 
-    index = hash_(stringKey, TABLE_SIZE); //call the string overload of the hash_ function here
-    hashTable[index] = key;
-    
-    cout << "The hash of key " << stringKey << " is " << index << " which stores the value " << hashTable[hash_(stringKey, TABLE_SIZE)] << endl;
-*/
-
-// Ex 3 - open addressing - try linear probing, quadratic probing, and prime probing (aka double hashing)
-
-    cout << "\nExercise 3: Collisions - Open Addressing " << endl;
-
-    // attempt to add another duplicate name here... 
-/*
-    string stringKeyDup = "Nick";
-    key = getPhoneNumber();
-    index = hash_(stringKeyDup, TABLE_SIZE);
-    hashTable[index] = key;
-
-    cout << "The hash of key " << stringKeyDup << " is " << index << " which stores the value " << hashTable[hash_(stringKeyDup, TABLE_SIZE)] << endl;
-*/
-
-// Ex 4 - closed chaining with a wrapper for the HashTable, which instantiates a LinkedList with colliding elements
-
-// Ex 5 - now finally utilise the unordered_map - compare its performance against previous hash tables.
-
-    return 0;
-}
 
 /*
 * Exercise 1: Set up the hash table
@@ -220,4 +172,62 @@ void unorderedMap(){
     cout<< "\nExercise 5: STL Unordered Map" << endl;
     //implement your solution here. 
 
+}
+
+int main() {
+  cout << "C++ DS&A Hashing\n" << endl;
+
+  // Ex 1
+  // Declare a constant for the TABLE_SIZE of 30
+  long*
+      hashTable;  // Declare a pointer to an array of TABLE_SIZE. Use the data
+                  // type 'long' to be able to handle 11-12 digit phone numbers.
+
+  cout << "Exercise 1: Hash Function for integer keys" << endl;
+
+  // call the 'getPhoneNumber' here and assign return to 'key'
+  // then pass the key and TABLE_SIZE to the hash_ function - assign the return
+  // to an index variable hashTable[index] = key;
+
+  /* Check your hash worked correctly by uncommenting the below statement */
+  // cout << "The hash of key " << key << " is " << index << " which stores the
+  // value " << hashTable[hash_(key, TABLE_SIZE)] << endl;
+
+  // Ex 2
+  cout << "\nExercise 2: Overloaded Hash Function for string keys" << endl;
+
+  // assign your name as a key and call the overloaded hash function
+  /*
+      string stringKey = "Nick"; //now assign a name of a person as a string key
+      key = getPhoneNumber();
+      index = hash_(stringKey, TABLE_SIZE); //call the string overload of the
+     hash_ function here hashTable[index] = key;
+
+      cout << "The hash of key " << stringKey << " is " << index << " which
+     stores the value " << hashTable[hash_(stringKey, TABLE_SIZE)] << endl;
+  */
+
+  // Ex 3 - open addressing - try linear probing, quadratic probing, and prime
+  // probing (aka double hashing)
+
+  cout << "\nExercise 3: Collisions - Open Addressing " << endl;
+
+  // attempt to add another duplicate name here...
+  /*
+      string stringKeyDup = "Nick";
+      key = getPhoneNumber();
+      index = hash_(stringKeyDup, TABLE_SIZE);
+      hashTable[index] = key;
+
+      cout << "The hash of key " << stringKeyDup << " is " << index << " which
+     stores the value " << hashTable[hash_(stringKeyDup, TABLE_SIZE)] << endl;
+  */
+
+  // Ex 4 - closed chaining with a wrapper for the HashTable, which instantiates
+  // a LinkedList with colliding elements
+
+  // Ex 5 - now finally utilise the unordered_map - compare its performance
+  // against previous hash tables.
+
+  return 0;
 }
