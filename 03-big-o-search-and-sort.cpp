@@ -33,7 +33,7 @@ int getRandomNumber() {
 
 void initArray(int arr[], int size);                  // Exercise 1
 void bubbleSort(int arr[], int size);                 // Exercise 2
-void mergeSort(int arr[], int left, int right);       // Exercise 3
+void mergeSort(int arr[], size_t size);       // Exercise 3
 void merge(int arr[], int left, int mid, int right);  // Exercise 3
 int linearSearch(int arr[], int size, int target);    // Exercise 4
 int binarySearch(int arr[], int size, int target);    // Exercise 5
@@ -64,6 +64,11 @@ bool isSorted(int arr[], int size) {
 double timeSort(void (*sortFunc)(int[], size_t), size_t size) {
   int *arr = new int[size];
   initArray(arr, size);
+  if (isSorted(arr, size)) {
+    cout << "Before sort: array is sorted!!" << endl;
+  } else {
+    cout << "Before sort: array is not sorted" << endl;
+  }
   auto start = chrono::high_resolution_clock::now();
   sortFunc(arr, size);
   auto end = chrono::high_resolution_clock::now();
@@ -72,9 +77,9 @@ double timeSort(void (*sortFunc)(int[], size_t), size_t size) {
   if (isSorted(arr, size)) {
     cout << "After sort: array is sorted" << endl;
   } else {
-    cout << "After sort: array is not sorted!" << endl;
+    cout << "After sort: array is not sorted!!" << endl;
   }
-  cout << "Elapsed time for " << size << "elements: " << duration.count()
+  cout << "Elapsed time for " << size << " elements: " << duration.count()
        << " seconds\n";
   return duration.count();
 }
@@ -84,26 +89,24 @@ void compareSortTime(void (*sortFunc)(int[], size_t), size_t size1,
   double time1 = timeSort(sortFunc, size1);
   double time2 = timeSort(sortFunc, size2);
   cout << "Ratio between array sizes: " << size2 / size1 << endl;
-  cout << "Ratio between sort times: " << time2 / time1 << endl;
-}
-
-void compareSortTime(void (*sortFunc)(int[], size_t), size_t size1,
-                     size_t size2) {
-  double time1 = timeSort(sortFunc, size1);
-  double time2 = timeSort(sortFunc, size2);
-  cout << "Ratio between array sizes: " << size2 / size1 << endl;
-  cout << "Ratio between sort times: " << time2 / time1 << endl;
+  cout << "Ratio between search times: " << time2 / time1 << endl;
 }
 
 double timeSearch(int (*searchFunc)(int[], size_t, int), size_t size,
                   int target) {
   int *arr = new int[size];
   initArray(arr, size);
+  mergeSort(arr, size);
   auto start = chrono::high_resolution_clock::now();
-  searchFunc(arr, size, target);
+  int foundIndex = searchFunc(arr, size, target);
   auto end = chrono::high_resolution_clock::now();
   chrono::duration<double> duration = end - start;
-  cout << "Elapsed time for " << size << "elements: " << duration.count()
+  if (foundIndex == -1) {
+    cout << "Target not found" << endl;
+  } else {
+    cout << "Found target at index " << foundIndex << endl;
+  }
+  cout << "Elapsed time for " << size << " elements: " << duration.count()
        << " seconds\n";
   return duration.count();
 }
@@ -116,50 +119,6 @@ void compareSearchTime(int (*searchFunc)(int[], size_t, int), size_t size1,
   cout << "Ratio between sort times: " << time2 / time1 << endl;
 }
 
-int main() {
-  cout << "C++ DS&A Big O + Search and Sorting algorithms\n" << endl;
-
-  /* Exercise 1 - Initialise the small and large arrays*/
-
-  // initialise a constant for SIZE_S with the value 100
-  // initialise a constant for SIZE_L with the value 100000
-  const size_t SIZE_S = 100;
-  const size_t SIZE_L = 100000;
-
-  // TODO: some timing for something linear (initialising arrays)
-
-  /* EXERCISE 2 - Bubble Sort */
-
-  compareSortTime(bubbleSort, SIZE_S, SIZE_L);
-
-  /* Exercise 3 - Merge Sort */
-
-  // START TIMER
-  // cout<< "\nExercise 3: Merge Sort on an array of size " << SIZE_S << endl;
-  // mergeSort(smallArray, 0, SIZE_S-1);
-  // END TIMER
-
-  // cout<< "\nExercise 3: Merge Sort on an array of size " << SIZE_L << endl;
-  //  START TIMER
-  // mergeSort(largeArray, 0, SIZE_L-1);
-  //  END TIMER
-
-  /* Exercise 4 - Linear Search */
-  int target = 0;
-  int index = 0;
-  // START TIMER
-  // linearSearch(largeArray, SIZE_L, target);
-  // END TIMER
-
-  /* Exercise 5 - Binary Search */
-
-  // START TIMER
-  // index = binarySearch(largeArray, SIZE_L, target);
-  // END TIMER
-
-  return 0;
-}
-
 /*
  * Exercise 1: Completing the initArray function below which takes a pointer to
  * an array and the size to iterate through. Write a loop which iterate through
@@ -169,9 +128,7 @@ int main() {
  */
 
 void initArray(int arr[], int size) {
-  cout << "\nExercise 1: Initialise an array of size " << size << endl;
-
-  // implement your solution here
+  cout << "Initialising an array of size " << size << endl;
   for (int i = 0; i < size; i++) {
     //*(arr + i) = getRandomNumber();
     arr[i] = getRandomNumber();
@@ -196,7 +153,7 @@ void swap(int *a, int *b) {
 }
 
 void bubbleSort(int arr[], size_t size) {
-  cout << "\nExercise 2: Bubble Sort on an array of size " << size << endl;
+  cout << "Bubble sorting an array of size " << size << endl;
 
   bool swapped;
   do {
@@ -221,15 +178,26 @@ void bubbleSort(int arr[], size_t size) {
  * difference between bubble sort and merge sort algorithms. What do you notice?
  */
 
-void mergeSort(int arr[], int left, int right) {  // right will be size-1
+void mergeSortRecurse(int arr[], int left, int right) {
+  if (left == right) {
+    return;
+  }
+  // Gets rounded down
+  int mid = (left + right) / 2;
 
-  // implement merge sort here with recursive calls
+  // Sort left
+  mergeSortRecurse(arr, left, mid);
 
-  // if left is less than right
-  // set mid
-  // call mergeSort(arr, left, mid)
-  // call mergeSort(arr, mid+1, right)
-  // finally merge(...)
+  // Sort right
+  mergeSortRecurse(arr, mid + 1, right);
+
+  // Merge
+  merge(arr, left, mid, right);
+}
+
+void mergeSort(int arr[], size_t size) {  // right will be size-1
+  cout << "Merge sorting an array of size " << size << endl;
+  mergeSortRecurse(arr, 0, size - 1);
 }
 
 // merge given here to save time
@@ -282,14 +250,17 @@ void merge(int arr[], int left, int mid, int right) {
  *
  */
 
-int linearSearch(int arr[], int size, int target) {
-  cout << "\nExercise 4: Linear Search of array of size " << size
+int linearSearch(int arr[], size_t size, int target) {
+  cout << "Linear Search of array of size " << size
        << " to locate value " << target << endl;
 
-  // implement your solution here.
+  for (int i = 0; i < size; i++) {
+    if (arr[i] == target) {
+      return i;
+    }
+  }
 
-  return 0;  // think about return values for both positive and negative cases
-             // of finding the target
+  return -1;
 }
 
 /* Exercise 5: Now implement the binary search function below.
@@ -307,23 +278,52 @@ int linearSearch(int arr[], int size, int target) {
  * this value in the structure.
  */
 
-int binarySearch(int arr[], int size, int target) {
-  cout << "Exercise 5: Binary Search of array of size " << size
+int binarySearch(int arr[], size_t size, int target) {
+  cout << "Binary Search of array of size " << size
        << " to locate value " << target << endl;
 
-  int left = 0;
-  int right = size - 1;
+  int start = 0;
+  int end = size - 1;
 
-  // translate the pseudocode below:
+  while (end >= start) {
+    // rounded down
+    int mid = (start + end) / 2;
+    if (mid == target) {
+      return mid;
+    }
+    if (mid < target) {
+      start = mid + 1;
+    } else {
+      end = mid;
+    }
+  }
+  return -1;
+}
 
-  // whilst left is less than or equal to right
-  // set mid
-  // if mid is target
-  // return index of mid
-  // else if mid less than target
-  // set left to mid + 1
-  // else
-  // set right to mid - 1
+int main() {
+  cout << "C++ DS&A Big O + Search and Sorting algorithms\n" << endl;
 
-  return 0;  // again think about what to return here...
+  cout << "\nExercise 1: Initialise an array" << endl;
+  // TODO: timing and logging for something linear (initialising arrays)
+  int *smallArray = new int[100];
+  initArray(smallArray, 100);
+
+  // cout << "\nExercise 2: Bubble sort" << endl;
+  // compareSortTime(&bubbleSort, 1000, 10000);
+
+  // cout << "\nExercise 3: Merge Sort" << endl;
+  // compareSortTime(&mergeSort, 100000, 2000000);
+
+  cout << "\nExercise 3: Linear search" << endl;
+  compareSearchTime(&linearSearch, 10000, 1000000, 101);
+  cout << endl;
+  compareSearchTime(&linearSearch, 10000, 100000, 34);
+
+  /* Exercise 5 - Binary Search */
+  cout << "\nExercise 5: Binary Search" << endl;
+  compareSearchTime(&binarySearch, 10000, 1000000, 101);
+  cout << endl;
+  compareSearchTime(&binarySearch, 10000, 100000, 34);
+
+  return 0;
 }
