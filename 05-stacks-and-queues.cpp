@@ -174,64 +174,6 @@ class LinkedStack {
   }
 };
 
-int main() {
-  cout << "C++ DS&A Stacks and Queues\n" << endl;
-
-  // Ex 1 - Stack with an array / vector
-  cout << "Exercise 1: Stack using an Array / Vector" << endl;
-  // instantiate the Stack class and push/pop values here.
-
-  // ArrayStack *arrayStack = new ArrayStack();
-  // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
-  // arrayStack->push(1);
-  // arrayStack->push(2);
-  // arrayStack->push(3);
-  // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
-  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
-
-  // Ex 2 - Stack with a Linked List
-  cout << "\nExercise 2: Stack using a Linked List " << endl;
-
-  LinkedStack *linkedStack = new LinkedStack();
-  // cout << "peeked " << linkedStack->peek() << endl;
-  linkedStack->push(1);
-  linkedStack->push(2);
-  linkedStack->push(3);
-  cout << "peeked " << linkedStack->peek() << endl;
-  cout << "peeked " << linkedStack->peek() << endl;
-  cout << "popped " << linkedStack->pop() << endl;
-  cout << "popped " << linkedStack->pop() << endl;
-  cout << "peeked " << linkedStack->peek() << endl;
-  // cout << "popped " << linkedStack->pop() << endl;
-  // cout << "popped " << linkedStack->pop() << endl;
-  // cout << "popped " << linkedStack->pop() << endl;
-
-  // Ex 3 - Queue using an Array
-
-  cout << "\nExercise 3: Queue using an Array " << endl;
-
-  // instantiate the Queue class and enqueue/dequeue values here.
-
-  // Ex 4 - Queue using a Linked List
-  cout << "\nExercise 4: Queue using a Linked List " << endl;
-
-  // instantiate the LinkedQueue class and enqueue/dequeue values here.
-
-  // Ex 5 - STL Stack and Queue
-
-  cout << "\nExercise 5: STL Stack Example" << endl;
-  STLStack();
-
-  cout << "\nExercise 5: STL Queue Example" << endl;
-  STLQueue();
-
-  return 0;
-}
-
 /*
  * Exercise 1: Create a Stack class that uses an Array
  * Complete the Stack class below, which has functionality to 'peek', 'pop', and
@@ -352,4 +294,62 @@ void STLStack() {
 
 void STLQueue() {
   // instantiate the STL queue and enqueue/dequeue values here.
+}
+
+int main() {
+  cout << "C++ DS&A Stacks and Queues\n" << endl;
+
+  // Ex 1 - Stack with an array / vector
+  cout << "Exercise 1: Stack using an Array / Vector" << endl;
+  // instantiate the Stack class and push/pop values here.
+
+  // ArrayStack *arrayStack = new ArrayStack();
+  // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
+  // arrayStack->push(1);
+  // arrayStack->push(2);
+  // arrayStack->push(3);
+  // cout << "peeked " << arrayStack->peek().value_or(-999) << endl;
+  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+  // cout << "popped " << arrayStack->pop().value_or(-999) << endl;
+
+  // Ex 2 - Stack with a Linked List
+  cout << "\nExercise 2: Stack using a Linked List " << endl;
+
+  LinkedStack *linkedStack = new LinkedStack();
+  // cout << "peeked " << linkedStack->peek() << endl;
+  linkedStack->push(1);
+  linkedStack->push(2);
+  linkedStack->push(3);
+  cout << "peeked " << linkedStack->peek() << endl;
+  cout << "peeked " << linkedStack->peek() << endl;
+  cout << "popped " << linkedStack->pop() << endl;
+  cout << "popped " << linkedStack->pop() << endl;
+  cout << "peeked " << linkedStack->peek() << endl;
+  // cout << "popped " << linkedStack->pop() << endl;
+  // cout << "popped " << linkedStack->pop() << endl;
+  // cout << "popped " << linkedStack->pop() << endl;
+
+  // Ex 3 - Queue using an Array
+
+  cout << "\nExercise 3: Queue using an Array " << endl;
+
+  // instantiate the Queue class and enqueue/dequeue values here.
+
+  // Ex 4 - Queue using a Linked List
+  cout << "\nExercise 4: Queue using a Linked List " << endl;
+
+  // instantiate the LinkedQueue class and enqueue/dequeue values here.
+
+  // Ex 5 - STL Stack and Queue
+
+  cout << "\nExercise 5: STL Stack Example" << endl;
+  STLStack();
+
+  cout << "\nExercise 5: STL Queue Example" << endl;
+  STLQueue();
+
+  return 0;
 }
