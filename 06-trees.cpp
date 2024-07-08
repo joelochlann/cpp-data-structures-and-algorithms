@@ -50,20 +50,20 @@ int getRandomNumber(int lower, int upper) {
  *
  */
 
-class Node {
+class TreeNode {
  private:
-  vector<Node *> children;
+  vector<TreeNode *> children;
   string contents;
 
  public:
-  Node(string contents, vector<Node *> children) {
+  TreeNode(string contents, vector<TreeNode *> children) {
     this->contents = contents;
     this->children = children;
   }
-  vector<Node *> getChildren() { return children; }
+  vector<TreeNode *> getChildren() { return children; }
   void traversePreOrder() {
     cout << contents << endl;
-    for (Node *n : getChildren()) {
+    for (TreeNode *n : getChildren()) {
       n->traversePreOrder();
     }
   }
@@ -73,7 +73,7 @@ class Node {
     // No single definition of what this means for a general (non-binary) tree!
     // I'll go with: output first child, then parent, then remaining children
     int i = 0;
-    for (Node *n : getChildren()) {
+    for (TreeNode *n : getChildren()) {
       if (i == 0) {
         // first child
         n->traverseInOrder();
@@ -181,7 +181,6 @@ class BSTNode {
     }
 };
 
-
 /*
  * Exercise 3: DFS
  * Implement a Depth-First Search function, utilising either your Stack class
@@ -192,6 +191,7 @@ class BSTNode {
  * path of this file (with preceeding folders).
  *
  */
+
 
 /*
  * Exercise 4: BFS
@@ -223,15 +223,15 @@ int main() {
   // Ex 1 - Set up the Tree class
   cout << "Exercise 1: Setting up a Tree" << endl;
   // Create a tree of strings and check the three types of traversal
-  Node *tree = new Node("years", {
-    new Node("2018", {
-      new Node("Jan", {
-        new Node("1", {}),
-        new Node("2", {})
+  TreeNode *tree = new TreeNode("years", {
+    new TreeNode("2018", {
+      new TreeNode("Jan", {
+        new TreeNode("1", {}),
+        new TreeNode("2", {})
       })
     }),
-    new Node("2019", {}),
-    new Node("2020", {}),
+    new TreeNode("2019", {}),
+    new TreeNode("2020", {}),
   });
   tree->traversePreOrder();
 
