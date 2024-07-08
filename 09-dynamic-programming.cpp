@@ -63,7 +63,31 @@ int getRandomNumber(int lower, int upper) {
  * recursive/memoization approach?
  *
  */
+int fib(int n) {
+  if (n == 0) {
+    return 0;
+  }
+  if (n == 1) {
+    return 1;
+  }
+  return fib(n - 1) + fib(n - 2);
+}
 
+unordered_map<int, int> cache;
+int fibMemo(int n) {
+  if (n == 0) {
+    return 0;
+  }
+  if (n == 1) {
+    return 1;
+  }
+  auto cachedValue = cache.find(n);
+  if (cachedValue == cache.end()) {
+    // It's not in the cache
+    cache[n] = fib(n - 1) + fib(n - 2);
+  }
+  return cache[n];
+}
 
 /*
  * Exercise 2: Longest Common Subsequence (LCS)
@@ -141,6 +165,13 @@ int main() {
 
   // Ex 1 - Fibonnaci - from recursion to vector cache
   cout << "Exercise 1: Fibonnaci numbers with Recursion/Memoization" << endl;
+  cout << "fib(0): " << fib(0) << endl;
+  cout << "fib(1): " << fib(1) << endl;
+  cout << "fib(2): " << fib(2) << endl;
+  cout << "fib(3): " << fib(3) << endl;
+  cout << "fib(10): " << fib(10) << endl;
+  cout << "fib(40): " << fib(40) << endl;
+  cout << "fibMemo(40): " << fibMemo(40) << endl;
 
   // Ex 2 - LCS
   cout << "\nExercise 2: Longest Common Subsequence (LCS)" << endl;
