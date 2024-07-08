@@ -67,6 +67,24 @@ class Node {
       n->traversePreOrder();
     }
   }
+
+  // TODO: this doesn't work properly yet
+  void traverseInOrder() {
+    // No single definition of what this means for a general (non-binary) tree!
+    // I'll go with: output first child, then parent, then remaining children
+    int i = 0;
+    for (Node *n : getChildren()) {
+      if (i == 0) {
+        // first child
+        n->traverseInOrder();
+      }
+      cout << contents << endl;
+      if (i > 0) {
+        n->traverseInOrder();
+      }
+      i++;
+    }
+  };
 };
 
 // class Node {
@@ -121,6 +139,48 @@ class Node {
  * connect the Nodes together, modify the BST to use an array?
  *
  */
+class BSTNode {
+  public:
+    int value;
+    BSTNode *left;
+    BSTNode *right;
+
+    BSTNode(int value) {
+      this->value = value;
+    }
+
+    void insert(int valueToInsert) {
+      if (valueToInsert == value) {
+        // Value is already in tree
+        return;
+      }
+      if (valueToInsert < value) {
+        if (left) {
+          left->insert(valueToInsert);
+        } else {
+          left = new BSTNode(valueToInsert);
+        }
+      } else {
+        // it's greater
+        if (right) {
+          right->insert(valueToInsert);
+        } else {
+          right = new BSTNode(valueToInsert);
+        }
+      }
+    }
+
+    void traverseInOrder() {
+      if (left) {
+        left->traverseInOrder();
+      }
+      cout << value << endl;
+      if (right) {
+        right->traverseInOrder();
+      }
+    }
+};
+
 
 /*
  * Exercise 3: DFS
@@ -163,26 +223,34 @@ int main() {
   // Ex 1 - Set up the Tree class
   cout << "Exercise 1: Setting up a Tree" << endl;
   // Create a tree of strings and check the three types of traversal
-  Node *tree = new Node(
-      "years",
-      {
-          new Node("2018",
-                   {new Node("Jan", {new Node("1", {}), new Node("2", {})})}),
-          new Node("2019",
-                   {
-
-                   }),
-          new Node("2020",
-                   {
-
-                   }),
-      });
+  Node *tree = new Node("years", {
+    new Node("2018", {
+      new Node("Jan", {
+        new Node("1", {}),
+        new Node("2", {})
+      })
+    }),
+    new Node("2019", {}),
+    new Node("2020", {}),
+  });
   tree->traversePreOrder();
+
+  cout << "=======" << endl;
+  cout << "In order:" << endl;
+  tree->traverseInOrder();
 
   // Ex 2 - Set up a BST class
   cout << "\nExercise 2: Binary Search Tree" << endl;
-
-  // Create a BST and check the arrangement of nodes/values
+  BSTNode *bst = new BSTNode(5);
+  bst->insert(3);
+  bst->insert(8);
+  bst->insert(1);
+  bst->insert(9);
+  bst->insert(4);
+  bst->insert(2);
+  bst->insert(6);
+  bst->insert(7);
+  bst->traverseInOrder();
 
   // Ex 3 - DFS
   cout << "\nExercise 3: Depth-First Search using a Stack" << endl;
