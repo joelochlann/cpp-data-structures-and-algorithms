@@ -51,6 +51,52 @@ int getRandomNumber(int lower, int upper) {
  * E 0 4 0 8 0
  *
  */
+class MatrixGraph {
+  public:
+    vector<vector<int>> matrix;
+    MatrixGraph() {}
+
+    int addVertex() {
+      // Add row
+      vector<int> newRow = {};
+      // TODO: some nice "fill" function could be better?
+      // create row of old size. if 0... zero length
+      for (size_t i = 0; i < matrix.size(); i++) {
+        newRow.push_back(0);
+      }
+      // now we have 1 row, 0 cols
+      matrix.push_back(newRow);
+      // cout << "Rows: " << matrix.size() << endl;
+
+      // Add column
+      // Why doesn't this work? Seems like row is a copy rather than by reference!
+      // for (auto row : matrix) {
+      //   cout << "adding col" << endl;
+      //   row.push_back(0);
+      //   cout << "row size " << row.size() << endl;
+      // }
+      for (size_t rowIndex = 0; rowIndex < matrix.size(); rowIndex++) {
+        // cout << "adding col to row " << rowIndex << endl;
+        matrix[rowIndex].push_back(0);
+        // cout << "row size " << matrix[rowIndex].size() << endl;
+      }
+      // cout << "Cols: " << matrix[0].size() << endl;
+      return matrix.size() - 1;
+    }
+
+    void addEdge(int start, int end) {
+      matrix[start][end]++;
+    }
+
+    void display() {
+      for (auto row : matrix) {
+        for (auto col : row) {
+          cout << col << " ";
+        }
+        cout << endl;
+      }
+    }
+};
 
 /*
  * Exercise 2: Implement a Graph with a referenced structure
@@ -65,6 +111,38 @@ int getRandomNumber(int lower, int upper) {
  * correctly in the adjacency list. Create a print / display method to check.
  *
  */
+class Vertex {
+  public:
+    vector<Vertex *> neighbours;
+    string name;
+    Vertex(string initName, vector<Vertex *> initNeighbours = {}) {
+      neighbours = initNeighbours;
+      name = initName;
+    }
+    void addEdge(Vertex *neighbour) {
+      neighbours.push_back(neighbour);
+    }
+    string displayNeighbours() {
+      string s = "";
+      for (auto neighbour : neighbours) {
+        s += neighbour->name;
+        s += ", ";
+      }
+      return s;
+    }
+};
+class Graph {
+  public:
+    vector<Vertex *> vertices;
+    Graph(vector<Vertex *> initVertices = {}) { vertices = initVertices; }
+    void addVertex(Vertex *vertex) { vertices.push_back(vertex); }
+    void display() {
+      for (auto vertex : vertices) {
+        cout << "Vertex " << vertex->name << " has neighbours "
+             << vertex->displayNeighbours() << endl;
+      }
+    }
+};
 
 /*
  * Exercise 3: DFS using a Stack
@@ -115,11 +193,36 @@ int main() {
   // edges
   cout << "Exercise 1: Complete the Graph class with a indexed structure"
        << endl;
+  MatrixGraph *mg = new MatrixGraph();
+  int a = mg->addVertex();
+  int b = mg->addVertex();
+  int c = mg->addVertex();
+  int d = mg->addVertex();
+  int e = mg->addVertex();
+  mg->addEdge(a, b);
+  mg->addEdge(b, a);
+  mg->addEdge(c, e);
+  mg->addEdge(c, e);
+  mg->display();
 
   // Ex 2 - Set up a Graph and connect vertcies (nodes) together with a
   // referenced structure
   cout << "Exercise 2: Complete the Graph class with a referenced structure"
        << endl;
+  Vertex *va = new Vertex("a");
+  Vertex *vb = new Vertex("b");
+  Vertex *vc = new Vertex("c");
+  Vertex *vd = new Vertex("d");
+  Vertex *ve = new Vertex("e");
+  va->addEdge(vb);
+  vb->addEdge(va);
+  vc->addEdge(ve);
+  vc->addEdge(ve);
+  // Unlike a tree, there is no clear starting node (root)
+  // and if we pick the wrong one there may be no path to 
+  // any other nodes so there would be no way of traversing.
+  Graph *g = new Graph({va, vb, vc, vd, ve});
+  g->display();
 
   // Ex 3 - DFS.
   cout << "\nExercise 3: Depth-First Search of a Graph" << endl;
