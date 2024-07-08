@@ -61,6 +61,7 @@ class TreeNode {
     this->children = children;
   }
   vector<TreeNode *> getChildren() { return children; }
+  string getContents() { return contents; }
   void traversePreOrder() {
     cout << contents << endl;
     for (TreeNode *n : getChildren()) {
@@ -191,15 +192,63 @@ class BSTNode {
  * path of this file (with preceeding folders).
  *
  */
+optional<TreeNode *> dfs(TreeNode *tree, string stringToFind) {
+  stack<TreeNode *> s;
+  s.push(tree);
+  while (!s.empty()) {
+    TreeNode *current = s.top();
+    s.pop();
+    cout << "Visiting " << current->getContents() << endl;
+    if (current->getContents() == stringToFind) {
+      return current;
+    }
+    // Go from right to left! Because it will be popped in reverse order
+    vector<TreeNode *> children = current->getChildren();
+    for (int i = children.size() - 1; i >= 0; i--) {
+      s.push(children[i]);
+    }
+  }
+  return nullopt;
+}
 
+optional<TreeNode *> dfsRecursive(TreeNode *node, string stringToFind) {
+  cout << "Visiting " << node->getContents() << endl;
+  if (node->getContents() == stringToFind) {
+    return node;
+  }
+  for (TreeNode *child : node->getChildren()) {
+    auto result = dfsRecursive(child, stringToFind);
+    if (result) {
+      return result;
+    }
+  }
+  return nullopt;
+}
 
 /*
- * Exercise 4: BFS
- * Implement a Breadth-First Search function, utilising either your Queue class
- * from last week, or the STL's queue. Test this works on a tree with digits.
- *
- *
- */
+  * Exercise 4: BFS
+  * Implement a Breadth-First Search function, utilising either your Queue
+  * class from last week, or the STL's queue. Test this works on a tree with
+  * digits.
+  *
+  *
+  */
+optional<TreeNode *> bfs(TreeNode *tree, string stringToFind) {
+  queue<TreeNode *> q;
+  q.push(tree);
+  while (!q.empty()) {
+    TreeNode *current = q.front();
+    q.pop();
+    cout << "Visiting " << current->getContents() << endl;
+    if (current->getContents() == stringToFind) {
+      return current;
+    }
+    for (TreeNode *child : current->getChildren()) {
+      q.push(child);
+    }
+  }
+  return nullopt;
+}
 
 /*
  * Exercise 5: AVL Tree
@@ -254,13 +303,29 @@ int main() {
 
   // Ex 3 - DFS
   cout << "\nExercise 3: Depth-First Search using a Stack" << endl;
+  optional<TreeNode *> dfsResult = dfs(tree, "3");
+  if (dfsResult.has_value()) {
+    cout << "found " << dfsResult.value()->getContents() << endl;
+  } else {
+    cout << "coud not find 3" << endl;
+  }
 
-  // reuse your Stack class from 05 Stacks and Queues
+  cout << "\nExercise 3a: Depth-First Search using recursion" << endl;
+  optional<TreeNode *> dfsRecursiveResult = dfsRecursive(tree, "3");
+  if (dfsRecursiveResult.has_value()) {
+    cout << "found " << dfsRecursiveResult.value()->getContents() << endl;
+  } else {
+    cout << "coud not find 3" << endl;
+  }
 
   // Ex 4 - BFS
   cout << "\nExercise 4: Breadth-First Search using a Queue " << endl;
-
-  // reuse your Queue class from 05 Stacks and Queues
+  optional<TreeNode *> bfsResult = bfs(tree, "1");
+  if (bfsResult.has_value()) {
+    cout << "found " << bfsResult.value()->getContents() << endl;
+  } else {
+    cout << "coud not find 1" << endl;
+  }
 
   // Ex 5 - AVL tree
   cout << "\nExercise 5: AVL Tree which balances itself" << endl;
