@@ -308,13 +308,13 @@ int main() {
   int *smallArray = new int[100];
   initArray(smallArray, 100);
 
-  // cout << "\nExercise 2: Bubble sort" << endl;
-  // compareSortTime(&bubbleSort, 1000, 10000);
+  cout << "\nExercise 2: Bubble sort" << endl;
+  compareSortTime(&bubbleSort, 1000, 10000);
 
-  // cout << "\nExercise 3: Merge Sort" << endl;
-  // compareSortTime(&mergeSort, 100000, 2000000);
+  cout << "\nExercise 3: Merge Sort" << endl;
+  compareSortTime(&mergeSort, 100000, 2000000);
 
-  cout << "\nExercise 3: Linear search" << endl;
+  cout << "\nExercise 4: Linear search" << endl;
   compareSearchTime(&linearSearch, 10000, 1000000, 101);
   cout << endl;
   compareSearchTime(&linearSearch, 10000, 100000, 34);
