@@ -148,20 +148,20 @@ class Graph {
  */
 optional<string> dfs(Vertex *root, string nameToFind) {
   stack<Vertex *> vertexStack;
-  unordered_set<Vertex *> visited;
+  unordered_set<string> visited;
   vertexStack.push(root);
   while (!vertexStack.empty()) {
     Vertex *current = vertexStack.top();
     vertexStack.pop();
     cout << "Visiting " << current->name << endl;
-    visited.insert(current);
+    visited.insert(current->name);
     if (current->name == nameToFind) {
       return current->name;
     }
     // Go from right to left! Because it will be popped in reverse order
     vector<Vertex *> neighbours = current->neighbours;
     for (int i = neighbours.size() - 1; i >= 0; i--) {
-      if (!visited.contains(neighbours[i])) {
+      if (!visited.contains(neighbours[i]->name)) {
         vertexStack.push(neighbours[i]);
       }
     }
@@ -181,6 +181,26 @@ optional<string> dfs(Vertex *root, string nameToFind) {
  * ahead of then.
  *
  */
+optional<string> bfs(Vertex *root, string stringToFind) {
+  queue<Vertex *> vertexQueue;
+  unordered_set<string> visited;
+  vertexQueue.push(root);
+  while (!vertexQueue.empty()) {
+    Vertex *current = vertexQueue.front();
+    vertexQueue.pop();
+    visited.insert(current->name);
+    cout << "Visiting " << current->name << endl;
+    if (current->name == stringToFind) {
+      return current->name;
+    }
+    for (Vertex *neighbour : current->neighbours) {
+      if (!visited.contains(neighbour->name)) {
+        vertexQueue.push(neighbour);
+      }
+    }
+  }
+  return nullopt;
+}
 
 /*
  * Exercise 5: Topological Sort
@@ -239,7 +259,6 @@ int main() {
 
   // Ex 3 - DFS.
   cout << "\nExercise 3: Depth-First Search of a Graph" << endl;
-  // Refactor your DFS function from 06 Trees (if previously completed)
   optional<string> maybeB = dfs(va, "b");
   cout << "Result of searching: " << maybeB.value_or("not found!") << endl;
 
@@ -252,7 +271,14 @@ int main() {
 
   // Ex 4 - BFS
   cout << "\nExercise 4: Breadth-First Search of a Graph " << endl;
-  // Refactor your BFS function from 06 Trees (if previously completed)
+  maybeB = bfs(va, "b");
+  cout << "Result of searching: " << maybeB.value_or("not found!") << endl;
+
+  maybeE = bfs(va, "e");
+  cout << "Result of searching: " << maybeE.value_or("not found!") << endl;
+
+  optional<string> maybeD = bfs(va, "d");
+  cout << "Result of searching: " << maybeD.value_or("not found!") << endl;
 
   // Ex 5 - Topological Sort
   cout << "\nExercise 5: Topological Sort" << endl;
