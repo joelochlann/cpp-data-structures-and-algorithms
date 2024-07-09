@@ -37,6 +37,41 @@ int getRandomNumber(int lower, int upper) {
   return randomNumber;
 }
 
+
+
+class Vertex {
+  public:
+    vector<pair<Vertex *, int>> neighbours; // Modified to store weights against edges
+    string name;
+    Vertex(string initName, vector<pair<Vertex *, int>> initNeighbours = {}) {
+      neighbours = initNeighbours;
+      name = initName;
+    }
+    void addEdge(Vertex *neighbour, int weight) { // Modified to accept weight parameter
+      neighbours.push_back(make_pair(neighbour, weight)); // Store neighbour and weight as a pair
+    }
+    string displayNeighbours() {
+      string s = "";
+      for (auto neighbour : neighbours) {
+        s += neighbour.first->name;
+        s += ", ";
+      }
+      return s;
+    }
+};
+class Graph {
+  public:
+    vector<Vertex *> vertices;
+    Graph(vector<Vertex *> initVertices = {}) { vertices = initVertices; }
+    void addVertex(Vertex *vertex) { vertices.push_back(vertex); }
+    void display() {
+      for (auto vertex : vertices) {
+        cout << "Vertex " << vertex->name << " has neighbours "
+             << vertex->displayNeighbours() << endl;
+      }
+    }
+};
+
 /*
  * Exercise 1: Dijkstra's Algorithm
  * Either with the graph provided above (or with your Graph implementation from
@@ -63,6 +98,7 @@ int getRandomNumber(int lower, int upper) {
  *
  * E->D = 3
  * E->F = 2
+
  *
  *
  * Implement Dijkstra's algorithm to find the shortest path between node A and F
@@ -83,13 +119,18 @@ int getRandomNumber(int lower, int upper) {
 // Below is a simplified pseudocode of Dijkstra's algorithm to get you started:
 
 /*
-   Dijkstra(G, s):
-    distances <- list of length equal to the number of nodes of the graph,
-   initially it has all its elements equal to infinite distances[s] = 0 queue =
-   the set of vertices of G while queue is not empty: u <- vertex in queue with
-   min distances[u] remove u from queue for each neighbor v of u: temp =
-   distances[u] + value(u,v) if temp < distances[v]: distances[v] = temp return
-   distances
+    Dijkstra(G, s):
+    distances <- list of length equal to the number of nodes of the graph, initially it has all its elements equal to infinite
+    distances[s] = 0
+    queue = the set of vertices of G
+    while queue is not empty:
+         u <- vertex in queue with min distances[u]
+         remove u from queue
+         for each neighbor v of u:
+              temp = distances[u] + value(u,v)
+              if temp < distances[v]:
+                    distances[v] = temp
+    return distances
 */
 
 /*
@@ -109,6 +150,61 @@ int getRandomNumber(int lower, int upper) {
  * F : 6
  *
  */
+
+struct VertexData {
+  int shortestDistance;
+  optional<string> previous;
+};
+
+// This is where a priority queue (aka min heap) would help,
+// by allowing us to get the minimum value in O(1)
+Vertex *findAndRemoveMinimumElement(queue<Vertex *> &elements,
+                                    unordered_map<string, VertexData> vertexData) {
+  Vertex *minElement;
+  int infinity = numeric_limits<int>::max();
+  int minDistance = infinity;
+  while (!elements.empty()) {
+    Vertex *element = elements.front();
+    const VertexData v = vertexData[element->name];
+    if (v.shortestDistance < minDistance) {
+      minDistance = v.shortestDistance;
+      minElement = element;
+    }
+
+    // TODO: remove the element from the queue!
+  }
+
+  return minElement;
+}
+
+unordered_map<string, VertexData> dijkstra(Graph *g, Vertex *start) {
+  unordered_map<string, VertexData> ret;
+  queue<Vertex *> q;
+  Vertex * current;
+  for (auto &vertex : g->vertices) {
+    q.push(vertex);
+    if (vertex->name == start->name) {
+      ret[vertex->name] = {shortestDistance: 0};
+    } else {
+      ret[vertex->name] = {shortestDistance: numeric_limits<int>::max()};
+    }
+  }
+
+  while (!q.empty()) {
+    current = findAndRemoveMinimumElement(q, ret);
+    for (auto &neighbour : current->neighbours) {
+      // Update distance (if less)
+      const int weightToNeighbour = neighbour.second;
+      const int neighbourNewDistance = ret[current->name].shortestDistance + weightToNeighbour;
+      const int neighbourCurrentDistance = ret[(neighbour.first)->name].shortestDistance;
+      if (neighbourNewDistance < neighbourCurrentDistance) {
+        ret[(neighbour.first)->name].previous = current->name;
+        ret[(neighbour.first)->name].shortestDistance = neighbourNewDistance;
+      };
+    }
+  }
+  return ret;
+};
 
 /*
  * Exercise 3: Bellman-Ford Algorithm
@@ -308,13 +404,46 @@ bottleneckCapacity to forward edges
 
 int main() {
   cout << "C++ DS&A Graphs - Path Finding\n" << endl;
-
+  
   // Ex 1 - Dijkstra's algorithm - shortest path between two nodes
   cout << "Exercise 1: Dijkstra's algorithm" << endl;
+
+  // Create the graph
+  Vertex* A = new Vertex("A");
+  Vertex* B = new Vertex("B");
+  Vertex* C = new Vertex("C");
+  Vertex* D = new Vertex("D");
+  Vertex* E = new Vertex("E");
+  Vertex* F = new Vertex("F");
+
+  A->neighbours.push_back(make_pair(B, 2));
+  A->neighbours.push_back(make_pair(C, 4));
+
+  B->neighbours.push_back(make_pair(C, 1));
+  B->neighbours.push_back(make_pair(D, 4));
+  B->neighbours.push_back(make_pair(E, 2));
+
+  C->neighbours.push_back(make_pair(E, 3));
+
+  D->neighbours.push_back(make_pair(F, 2));
+
+  E->neighbours.push_back(make_pair(D, 3));
+  E->neighbours.push_back(make_pair(F, 2));
+
+  Graph *g = new Graph({A, B, C, D, E, F});
 
   // Ex 2 - Dijkstra's map of shortest paths
   cout << "\nExercise 2: Dijkstra's algorithm - map of shortest paths" << endl;
 
+  auto shortestPaths = dijkstra(g, A);
+
+  // Print shortest paths
+  cout << "Shortest Paths:" << endl;
+  for (const auto& path : shortestPaths) {
+    cout << path.first << ": distance " << path.second.shortestDistance << ", previous "
+         << path.second.previous.value_or("(no previous)") << endl;
+  }
+  
   // Ex 3 - Bellman-Ford algorithm for negative weights & unweighted graphs
   cout << "\nExercise 3: Bellman-Ford algorithm - negative weights & "
           "unweighted graphs"
