@@ -5,6 +5,7 @@
 #include <stack>
 #include <utility>  // For std::pair
 #include <vector>
+#include <unordered_set>
 
 /* README
  *  In this week, we'll look at Graphs: directed and undirected, weighted and
@@ -66,21 +67,11 @@ class MatrixGraph {
       }
       // now we have 1 row, 0 cols
       matrix.push_back(newRow);
-      // cout << "Rows: " << matrix.size() << endl;
 
       // Add column
-      // Why doesn't this work? Seems like row is a copy rather than by reference!
-      // for (auto row : matrix) {
-      //   cout << "adding col" << endl;
-      //   row.push_back(0);
-      //   cout << "row size " << row.size() << endl;
-      // }
-      for (size_t rowIndex = 0; rowIndex < matrix.size(); rowIndex++) {
-        // cout << "adding col to row " << rowIndex << endl;
-        matrix[rowIndex].push_back(0);
-        // cout << "row size " << matrix[rowIndex].size() << endl;
+      for (auto& row : matrix) {
+        row.push_back(0);
       }
-      // cout << "Cols: " << matrix[0].size() << endl;
       return matrix.size() - 1;
     }
 
@@ -155,6 +146,28 @@ class Graph {
  * class from previous weeks, why not refactor this to use the STL's stack?
  * Extension 2: Can you use DFS to detect whether there is a cycle in the graph?
  */
+optional<string> dfs(Vertex *root, string nameToFind) {
+  stack<Vertex *> vertexStack;
+  unordered_set<Vertex *> visited;
+  vertexStack.push(root);
+  while (!vertexStack.empty()) {
+    Vertex *current = vertexStack.top();
+    vertexStack.pop();
+    cout << "Visiting " << current->name << endl;
+    visited.insert(current);
+    if (current->name == nameToFind) {
+      return current->name;
+    }
+    // Go from right to left! Because it will be popped in reverse order
+    vector<Vertex *> neighbours = current->neighbours;
+    for (int i = neighbours.size() - 1; i >= 0; i--) {
+      if (!visited.contains(neighbours[i])) {
+        vertexStack.push(neighbours[i]);
+      }
+    }
+  }
+  return nullopt;
+}
 
 /*
  * Exercise 4: BFS using a Queue
@@ -227,6 +240,15 @@ int main() {
   // Ex 3 - DFS.
   cout << "\nExercise 3: Depth-First Search of a Graph" << endl;
   // Refactor your DFS function from 06 Trees (if previously completed)
+  optional<string> maybeB = dfs(va, "b");
+  cout << "Result of searching: " << maybeB.value_or("not found!") << endl;
+
+  optional<string> maybeE = dfs(va, "e");
+  cout << "Result of searching: " << maybeE.value_or("not found!") << endl;
+
+  vb->addEdge(vc);
+  maybeE = dfs(va, "e");
+  cout << "Result of searching: " << maybeE.value_or("not found!") << endl;
 
   // Ex 4 - BFS
   cout << "\nExercise 4: Breadth-First Search of a Graph " << endl;
