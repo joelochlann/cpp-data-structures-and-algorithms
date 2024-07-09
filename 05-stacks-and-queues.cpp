@@ -355,10 +355,35 @@ class LinkedQueue {
 
 void STLStack() {
   // instantiate the STL stack and push/pop values here.
+  stack<int> s;
+
+  s.push(1);
+  s.push(2);
+  s.push(3);
+
+  // With the STL stack, .pop() does not return the element removed
+  int popped;
+  while (s.size() > 0) {
+    popped = s.top();
+    s.pop();
+    cout << "Popped " << popped << endl;
+  }
 }
 
 void STLQueue() {
-  // instantiate the STL queue and enqueue/dequeue values here.
+  queue<int> q;
+
+  q.push(1);
+  q.push(2);
+  q.push(3);
+
+  // With the STL queue, .pop() does not return the element removed
+  int dequeued;
+  while (q.size() > 0) {
+    dequeued = q.front();
+    q.pop();
+    cout << "Dequeued " << dequeued << endl;
+  }
 }
 
 int main() {
