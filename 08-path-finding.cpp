@@ -151,59 +151,75 @@ class Graph {
  *
  */
 
-struct VertexData {
-  int shortestDistance;
+struct Path {
+  int distance;
   optional<string> previous;
 };
 
-// This is where a priority queue (aka min heap) would help,
-// by allowing us to get the minimum value in O(1)
-Vertex *findAndRemoveMinimumElement(queue<Vertex *> &elements,
-                                    unordered_map<string, VertexData> vertexData) {
-  Vertex *minElement;
+Vertex *findAndRemoveMinimumElement(list<Vertex *> &elements,
+                                    unordered_map<string, Path> vertexPath) {
+  list<Vertex *>::iterator minElement;
+  Vertex *ret;
   int infinity = numeric_limits<int>::max();
   int minDistance = infinity;
-  while (!elements.empty()) {
-    Vertex *element = elements.front();
-    const VertexData v = vertexData[element->name];
-    if (v.shortestDistance < minDistance) {
-      minDistance = v.shortestDistance;
-      minElement = element;
+  list<Vertex *>::iterator it;
+
+  // This is where a priority queue (aka min heap) would help,
+  // by allowing us to get the minimum value in O(1).
+  // Without that, we have to iterate over all elements to find the minimum.
+  for (it = elements.begin(); it != elements.end(); it++) {
+    const Path path = vertexPath[(*it)->name];
+    // It should be the case, even on first iteration,
+    // that at least one element (the starting node) has distance less than infinity.
+    // However, we don't explicitly initialise `minElement` so if somehow that were
+    // not the case, bad stuff would happen.
+    if (path.distance < minDistance) {
+      minDistance = path.distance;
+      minElement = it;
     }
-
-    // TODO: remove the element from the queue!
   }
+  // If we used a vector (or any array-backed data structure), we would need
+  // another pass to remove the minimum element (by copying the rest of the elements).
+  // But by using a linked list, we can remove the minimum element in O(1).
+  ret = *minElement;
+  elements.erase(minElement);
 
-  return minElement;
+  return ret;
 }
 
-unordered_map<string, VertexData> dijkstra(Graph *g, Vertex *start) {
-  unordered_map<string, VertexData> ret;
-  queue<Vertex *> q;
+unordered_map<string, Path> dijkstra(Graph *g, Vertex *start) {
+  unordered_map<string, Path> vertexPath;
+  list<Vertex *> unvisitedVertices;
   Vertex * current;
   for (auto &vertex : g->vertices) {
-    q.push(vertex);
+    unvisitedVertices.push_back(vertex);
     if (vertex->name == start->name) {
-      ret[vertex->name] = {shortestDistance: 0};
+      vertexPath[vertex->name] = {
+        .distance = 0,
+        .previous = nullopt
+      };
     } else {
-      ret[vertex->name] = {shortestDistance: numeric_limits<int>::max()};
-    }
-  }
-
-  while (!q.empty()) {
-    current = findAndRemoveMinimumElement(q, ret);
-    for (auto &neighbour : current->neighbours) {
-      // Update distance (if less)
-      const int weightToNeighbour = neighbour.second;
-      const int neighbourNewDistance = ret[current->name].shortestDistance + weightToNeighbour;
-      const int neighbourCurrentDistance = ret[(neighbour.first)->name].shortestDistance;
-      if (neighbourNewDistance < neighbourCurrentDistance) {
-        ret[(neighbour.first)->name].previous = current->name;
-        ret[(neighbour.first)->name].shortestDistance = neighbourNewDistance;
+      vertexPath[vertex->name] = {
+        .distance = numeric_limits<int>::max(),
+        .previous = nullopt
       };
     }
   }
-  return ret;
+
+  while (!unvisitedVertices.empty()) {
+    current = findAndRemoveMinimumElement(unvisitedVertices, vertexPath);
+    for (auto &neighbour : current->neighbours) {
+      // Update distance (if less)
+      const int weightToNeighbour = neighbour.second;
+      const int neighbourNewDistance = vertexPath[current->name].distance + weightToNeighbour;
+      const int neighbourCurrentDistance = vertexPath[(neighbour.first)->name].distance;
+      if (neighbourNewDistance < neighbourCurrentDistance) {
+        vertexPath[(neighbour.first)->name].previous = current->name;
+        vertexPath[(neighbour.first)->name].distance = neighbourNewDistance;
+      };
+    }
+  }
+  return vertexPath;
 };
 
 /*
@@ -440,7 +456,7 @@ int main() {
   // Print shortest paths
   cout << "Shortest Paths:" << endl;
   for (const auto& path : shortestPaths) {
-    cout << path.first << ": distance " << path.second.shortestDistance << ", previous "
+    cout << path.first << ": distance " << path.second.distance << ", previous "
          << path.second.previous.value_or("(no previous)") << endl;
   }
   
